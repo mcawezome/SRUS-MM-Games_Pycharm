@@ -43,3 +43,6 @@ class PlayerNode:
         return f"PlayerNode id: {self.key}, next: {self._next}, prev:{self._prev}"
         # If we wanted to seamlessly chain __str__ together, the following might be better.
         # return f"{self.key}"
+
+    def __repr__(self):
+        return f"PlayerNode(id:{self.key!r}, next:{self._next!r}, prev:{self._prev!r})"

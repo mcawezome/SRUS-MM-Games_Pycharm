@@ -34,7 +34,6 @@ class TestPlayerClass(unittest.TestCase):
         player_list.insert_at_head(node2)
         self.assertEqual(player_list.head.key, node2.key)
         self.assertEqual(player_list.head.next.key, node1.key)
-        self.assertEqual(player_list.head.prev.key, node1.key)
         self.assertEqual(player_list.tail.key, node1.key)
 
     def test_insert_at_head_for_multiple_node_list(self):
@@ -48,7 +47,7 @@ class TestPlayerClass(unittest.TestCase):
         player_list.insert_at_head(node3)
         self.assertEqual(player_list.head.key, node3.key)
         self.assertEqual(player_list.head.next.key, node2.key)
-        self.assertEqual(player_list.head.prev.key, node1.key)
+
         self.assertEqual(player_list.tail.key, node1.key)
 
     def test_insert_at_tail_for_empty_list(self):
@@ -70,9 +69,7 @@ class TestPlayerClass(unittest.TestCase):
         player_list.insert_at_tail(node2)
         self.assertEqual(player_list.head.key, node1.key)
         self.assertEqual(player_list.head.next.key, node2.key)
-        self.assertEqual(player_list.head.prev.key, node2.key)
         self.assertEqual(player_list.tail.key, node2.key)
-        self.assertEqual(player_list.tail.next.key, node1.key)
         self.assertEqual(player_list.tail.prev.key, node1.key)
 
     def test_insert_at_tail_for_multiple_node_list(self):
@@ -92,3 +89,38 @@ class TestPlayerClass(unittest.TestCase):
         self.assertEqual(player_list.head.next.next.key, node3.key)
         self.assertEqual(player_list.tail.key, node3.key)
 
+    def test_delete_head(self):
+        """Test function delete_at_head deletes first element correctly"""
+        player_list = PlayerList()
+        node1 = PlayerNode(Player("20", "John Smith"))
+        node2 = PlayerNode(Player("23", "Stephen Curry"))
+        node3 = PlayerNode(Player("42", "Douglas Adams"))
+        player_list.insert_at_tail(node1)
+        player_list.insert_at_tail(node2)
+        player_list.insert_at_tail(node3)
+
+        player_list.delete_head()
+
+        self.assertEqual(player_list.head.key, node2.key)
+        self.assertEqual(player_list.tail.key, node3.key)
+        player_list.delete_head()
+        self.assertEqual(player_list.head.key, node3.key)
+        self.assertEqual(player_list.tail.key, node3.key)
+
+    def test_delete_tail(self):
+        """Test function delete_at_head deletes first element correctly"""
+        player_list = PlayerList()
+        node1 = PlayerNode(Player("20", "John Smith"))
+        node2 = PlayerNode(Player("23", "Stephen Curry"))
+        node3 = PlayerNode(Player("42", "Douglas Adams"))
+
+        player_list.insert_at_head(node1)
+        player_list.insert_at_head(node2)
+        player_list.insert_at_head(node3)
+
+        player_list.delete_tail()
+        self.assertEqual(player_list.tail.key, node2.key)
+
+        player_list.delete_tail()
+        self.assertEqual(player_list.head.key, node3.key)
+        self.assertEqual(player_list.tail.key, node3.key)

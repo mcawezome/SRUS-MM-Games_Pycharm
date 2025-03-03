@@ -1,5 +1,4 @@
 from __future__ import annotations
-from player import Player
 from player_node import PlayerNode
 
 class PlayerList:
@@ -32,48 +31,66 @@ class PlayerList:
         if self.is_empty:
             self._head = node
             self._tail = node
-            return
-        is_one_node = self._head.prev is None and self._head.next is None
-        if is_one_node:
-            node.prev = self._head
-            node.next = self._head
-            self._tail = self._head
-            self._head = node
+            node.next = None  # Ensure node's pointers are set correctly
+            node.prev = None
             self._length += 1
             return
-        # if more than 1 node
-        node.prev = self._head.prev
+
         node.next = self._head
+        node.prev = None
+        self._head.prev = node  # update old head's prev to point to the new node
         self._head = node
-        # self._tail does not change.
         self._length += 1
-        return
 
     def insert_at_tail(self, node: PlayerNode) -> None:
         """Add a PlayerNode to the back of the list"""
         if self.is_empty:
+            # For an empty list, new node becomes both head and tail.
             self._head = node
             self._tail = node
-            return
-
-        is_one_node = self._head.prev is None and self._head.next is None
-        if is_one_node:
-            node.prev = self._head
-            node.next = self._head
-            self._head.prev = node
-            self._head.next = node
-            self._tail = node
+            node.next = None  # Ensure node's pointers are set correctly
+            node.prev = None
             self._length += 1
             return
 
-        # if more than 1 node
-        node.next = self._head
-        self._tail.next = node
         node.prev = self._tail
+        node.next = None
+        self._tail.next = node
         self._tail = node
-
         self._length += 1
-        return
+
+    def delete_head(self) -> None:
+        if self.is_empty:
+            raise IndexError("Cannot delete a node from an empty list")
+        if self.length == 1:
+            self._head = None
+            self._tail = None
+            self._length -= 1
+            return
+        # Update the head pointer to the next node.
+        new_head = self._head.next
+        new_head.prev = None  # New head's prev must be None.
+        self._head = new_head
+        self._length -= 1
+
+    def delete_tail(self) -> None:
+        if self.is_empty:
+            raise IndexError("Cannot delete a node from an empty list")
+        if self.length == 1:
+            self._head = None
+            self._tail = None
+            self._length -= 1
+            return
+
+        # Update the tail pointer to the previous node.
+        new_tail = self._tail.prev
+        new_tail.next = None
+        self._tail = new_tail
+        self._length -= 1
+
+    # def __repr__(self):
+    #     return f"PlayerList(head:'{self.head}', tail:'{self.tail}', length:'{self.length}')"
+    # Error: Maximum recursion depth exceeded
 
 # iter function, used to get node based on key in next step
 
