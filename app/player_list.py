@@ -88,21 +88,32 @@ class PlayerList:
         self._tail = new_tail
         self._length -= 1
 
-    # def __repr__(self):
-    #     return f"PlayerList(head:'{self.head}', tail:'{self.tail}', length:'{self.length}')"
-    # Error: Maximum recursion depth exceeded
+    def delete_node_with_key(self, key: str) -> bool:
+        """
+        Deletes the first node in the list with a certain key.
+        Returns True if found, and False if not found.
+        """
+        for node in self:
+            if node.key == key:
+                if node == self._head:
+                    self.delete_head()
+                    # delete_head() already decrements length
+                    return True
+                if node == self._tail:
+                    self.delete_tail()
+                    # delete_head() already decrements length
+                    return True
+                else:
+                    node.prev.next = node.next
+                    node.next.prev = node.prev
+                    self._length -= 1
+                    return True
+        return False
 
-# iter function, used to get node based on key in next step
-
-    # def __iter__(self):
-    #     """Makes PlayerList into a iterable object, using a generator and yield"""
-    #     if self.is_empty:
-    #         return
-    #         # yield None?
-    #     current = self._head
-    #     index = 0
-    #     while current is not None and index < self.length:
-    #         yield current
-    #         current = current.next
-    #         index += 1
+    def __iter__(self):
+        """Makes PlayerList into a iterable object, using a generator and yield"""
+        current = self._head
+        while current is not None:
+            yield current
+            current = current.next
 

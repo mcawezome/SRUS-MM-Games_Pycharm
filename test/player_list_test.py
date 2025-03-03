@@ -95,6 +95,7 @@ class TestPlayerClass(unittest.TestCase):
         node1 = PlayerNode(Player("20", "John Smith"))
         node2 = PlayerNode(Player("23", "Stephen Curry"))
         node3 = PlayerNode(Player("42", "Douglas Adams"))
+
         player_list.insert_at_tail(node1)
         player_list.insert_at_tail(node2)
         player_list.insert_at_tail(node3)
@@ -124,3 +125,25 @@ class TestPlayerClass(unittest.TestCase):
         player_list.delete_tail()
         self.assertEqual(player_list.head.key, node3.key)
         self.assertEqual(player_list.tail.key, node3.key)
+
+    def test_delete_node_with_key(self):
+        """Test function delete_at_head deletes correctly when given key"""
+        player_list = PlayerList()
+        node1 = PlayerNode(Player("20", "John Smith"))
+        node2 = PlayerNode(Player("23", "Stephen Curry"))
+        node3 = PlayerNode(Player("42", "Douglas Adams"))
+
+        player_list.insert_at_tail(node1)
+        player_list.insert_at_tail(node2)
+        player_list.insert_at_tail(node3)
+
+        self.assertFalse(player_list.delete_node_with_key("1"))
+        self.assertTrue(player_list.delete_node_with_key("23"))
+        self.assertEqual(player_list.tail.key, node3.key)
+
+        self.assertTrue(player_list.delete_node_with_key("42"))
+        self.assertEqual(player_list.tail.key, node1.key)
+
+        self.assertTrue(player_list.delete_node_with_key("20"))
+
+
