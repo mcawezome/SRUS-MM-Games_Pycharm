@@ -9,22 +9,25 @@ class TestPlayerClass(unittest.TestCase):
     Test PlayerClass is implemented correctly as a double-linked list of PlayerNodes.
     """
     def test_is_empty(self):
+        """Test newly initialised list is empty"""
         player_list = PlayerList()
         self.assertTrue(player_list)
         self.assertEqual(player_list.length, 0)
 
     def test_insert_at_head_for_empty_list(self):
-        """"""
+        """Test function insert_at_head in the case of an empty list"""
         player_list = PlayerList()
         player = Player("20", "John Smith")
         node1 = PlayerNode(player)
         player_list.insert_at_head(node1)
-        # test the keys because prev and next should have changed in the node
+        # test the keys only because prev and next should have changed from the original node
         self.assertEqual(player_list.head.key, node1.key)
+        self.assertEqual(player_list.tail.key, node1.key)
         self.assertEqual(player_list.head.next, None)
         self.assertEqual(player_list.head.prev, None)
 
     def test_insert_at_head_for_single_node_list(self):
+        """Test function insert_at_head in the case of a single node list"""
         player_list = PlayerList()
         node1 = PlayerNode(Player("20", "John Smith"))
         node2 = PlayerNode(Player("23", "Stephen Curry"))
@@ -33,8 +36,10 @@ class TestPlayerClass(unittest.TestCase):
         self.assertEqual(player_list.head.key, node2.key)
         self.assertEqual(player_list.head.next.key, node1.key)
         self.assertEqual(player_list.head.prev.key, node1.key)
+        self.assertEqual(player_list.tail.key, node1.key)
 
     def test_insert_at_head_for_multiple_node_list(self):
+        """Test function insert_at_head in the case of a multiple node list"""
         player_list = PlayerList()
         node1 = PlayerNode(Player("20", "John Smith"))
         node2 = PlayerNode(Player("23", "Stephen Curry"))
@@ -45,3 +50,4 @@ class TestPlayerClass(unittest.TestCase):
         self.assertEqual(player_list.head.key, node3.key)
         self.assertEqual(player_list.head.next.key, node2.key)
         self.assertEqual(player_list.head.prev.key, node1.key)
+        self.assertEqual(player_list.tail.key, node1.key)
