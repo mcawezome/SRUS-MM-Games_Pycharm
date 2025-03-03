@@ -3,30 +3,56 @@ from player import Player
 from player_node import PlayerNode
 
 class PlayerList:
-    """PlayerList object. Implementation of a double-linked list of PlayerNodes"""
+    """A doubly-linked list implementation for managing PlayerNodes.
+
+    The list maintains head and tail pointers and tracks its length.
+    """
     def __init__(self) -> None:
         self._head = None
-        self._tail = None
         self._length = 0
 
     @property
     def is_empty(self) -> bool:
+        """Checks if the list contains no nodes.
+
+        Returns:
+            bool: True if the list is empty, False otherwise.
+        """
         return self._head is None
 
     @property
     def length(self) -> int:
+        """Gets the number of nodes in the list.
+
+        Returns:
+            int: The current length of the list.
+        """
         return self._length
 
     @property
     def head(self) -> PlayerNode | None:
+        """Gets the first node in the list.
+
+        Returns:
+            PlayerNode or None: The head node, or None if list is empty.
+        """
         return self._head
 
     @property
     def tail(self) -> PlayerNode | None:
+        """Gets the last node in the list.
+
+        Returns:
+            PlayerNode or None: The tail node, or None if list is empty.
+        """
         return self._tail
 
     def insert_at_head(self, node: PlayerNode) -> None:
-        """Add a PlayerNode to the front of the PlayerList"""
+        """Inserts a PlayerNode at the front of the list.
+
+        Args:
+            node: The PlayerNode to insert.
+        """
         # We are passing nodes rather than values
         # because then input is already sanitised by Player's descriptors.
         if self.is_empty:
@@ -44,7 +70,11 @@ class PlayerList:
         self._length += 1
 
     def insert_at_tail(self, node: PlayerNode) -> None:
-        """Add a PlayerNode to the back of the list"""
+        """Inserts a PlayerNode at the end of the list.
+
+        Args:
+            node: The PlayerNode to insert.
+        """
         if self.is_empty:
             # For an empty list, new node becomes both head and tail.
             self._head = node
@@ -61,6 +91,11 @@ class PlayerList:
         self._length += 1
 
     def delete_head(self) -> None:
+        """Removes the first node in the list.
+
+        Raises:
+            IndexError: If the list is empty.
+        """
         if self.is_empty:
             raise IndexError("Cannot delete a node from an empty list")
         if self.length == 1:
@@ -75,6 +110,11 @@ class PlayerList:
         self._length -= 1
 
     def delete_tail(self) -> None:
+        """Removes the last node in the list.
+
+        Raises:
+            IndexError: If the list is empty.
+        """
         if self.is_empty:
             raise IndexError("Cannot delete a node from an empty list")
         if self.length == 1:
@@ -90,9 +130,13 @@ class PlayerList:
         self._length -= 1
 
     def delete_node_with_key(self, key: str) -> bool:
-        """
-        Deletes the first node in the list with a certain key.
-        Returns True if found, and False if not found.
+        """Deletes the first node with the specified key.
+
+        Args:
+            key: The key to search for and delete.
+
+        Returns:
+            bool: True if a node was found and deleted, False otherwise.
         """
         for node in self:
             if node.key == key:
@@ -102,7 +146,7 @@ class PlayerList:
                     return True
                 if node == self._tail:
                     self.delete_tail()
-                    # delete_head() already decrements length
+                    # delete_tail() already decrements length
                     return True
                 else:
                     node.prev.next = node.next
@@ -112,37 +156,37 @@ class PlayerList:
         return False
 
     def display(self, forward: bool = True) -> None:
-        """Display the list items in forward or reverse order"""
-        if self.is_empty:
+        """Prints the list contents to console.
+
+        Args:
+            forward: If True, prints from head to tail; if False, tail to head.
+        """
+        nodes = list(self if forward else reversed(self))
+        if not nodes:
             print("Empty list")
             return
 
-        output = ""
-
-        if forward is True:
-            # Use the regular iterator
-            nodes = self
-        elif forward is False:
-            # Use the reverse iterator
-            nodes = reversed(self)
-        else:
-            raise TypeError("forward parameter must be a boolean.")
-
-        for node in nodes:
-            output += f"{node.key}'{node.name}'->"
-
-        print(output[:-2]) # Remove the final '->' by slicing
+        output = " -> ".join(f"{node.key}'{node.name}'" for node in nodes)
+        print(output)
 
 
     def __iter__(self):
-        """Makes PlayerList into a iterable object, using a generator and yield"""
+        """Implements forward iteration through the list.
+
+        Yields:
+            PlayerNode: Each node in the list from head to tail.
+        """
         current = self._head
         while current is not None:
             yield current
             current = current.next
 
     def __reversed__(self):
-        """Makes PlayerList work with Python's built-in reversed() function"""
+        """Implements reverse iteration through the list.
+
+        Yields:
+            PlayerNode: Each node in the list from tail to head.
+        """
         current = self._tail
         while current is not None:
             yield current

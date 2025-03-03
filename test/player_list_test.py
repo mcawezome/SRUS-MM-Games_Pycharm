@@ -4,18 +4,20 @@ from player_node import PlayerNode
 from player import Player
 
 
-class TestPlayerClass(unittest.TestCase):
-    """
-    Test PlayerClass is implemented correctly as a double-linked list of PlayerNodes.
-    """
-    def test_is_empty(self):
-        """Test newly initialised list is empty"""
+class TestPlayerList(unittest.TestCase):
+    """Tests for the PlayerList doubly-linked list implementation."""
+
+    def test_new_list_is_empty(self):
+        """Tests initialization of an empty list."""
         player_list = PlayerList()
         self.assertTrue(player_list)
         self.assertEqual(player_list.length, 0)
 
-    def test_insert_at_head_for_empty_list(self):
-        """Test function insert_at_head in the case of an empty list"""
+    def test_insert_head_empty_list_sets_head_and_tail(self):
+        """Tests insert_at_head on an empty list.
+        
+        Verifies head and tail pointers are set correctly.
+        """
         player_list = PlayerList()
         node1 = PlayerNode(Player("20", "John Smith"))
         player_list.insert_at_head(node1)
@@ -25,8 +27,11 @@ class TestPlayerClass(unittest.TestCase):
         self.assertEqual(player_list.head.next, None)
         self.assertEqual(player_list.head.prev, None)
 
-    def test_insert_at_head_for_single_node_list(self):
-        """Test function insert_at_head in the case of a single node list"""
+    def test_insert_head_single_node_updates_pointers(self):
+        """Tests insert_at_head on a single-node list.
+        
+        Verifies node connections and head/tail pointers are updated.
+        """
         player_list = PlayerList()
         node1 = PlayerNode(Player("20", "John Smith"))
         node2 = PlayerNode(Player("23", "Stephen Curry"))
@@ -36,8 +41,11 @@ class TestPlayerClass(unittest.TestCase):
         self.assertEqual(player_list.head.next.key, node1.key)
         self.assertEqual(player_list.tail.key, node1.key)
 
-    def test_insert_at_head_for_multiple_node_list(self):
-        """Test function insert_at_head in the case of a multiple node list"""
+    def test_insert_head_multiple_nodes_maintains_links(self):
+        """Tests insert_at_head on a multi-node list.
+        
+        Verifies node connections and head/tail pointers are updated.
+        """
         player_list = PlayerList()
         node1 = PlayerNode(Player("20", "John Smith"))
         node2 = PlayerNode(Player("23", "Stephen Curry"))
@@ -50,8 +58,11 @@ class TestPlayerClass(unittest.TestCase):
 
         self.assertEqual(player_list.tail.key, node1.key)
 
-    def test_insert_at_tail_for_empty_list(self):
-        """Test function insert_at_tail in the case of an empty list"""
+    def test_insert_tail_empty_list_sets_head_and_tail(self):
+        """Tests insert_at_tail on an empty list.
+        
+        Verifies head and tail pointers are set correctly.
+        """
         player_list = PlayerList()
         node1 = PlayerNode(Player("20", "John Smith"))
         player_list.insert_at_tail(node1)
@@ -60,8 +71,11 @@ class TestPlayerClass(unittest.TestCase):
         self.assertEqual(player_list.head.next, None)
         self.assertEqual(player_list.head.prev, None)
 
-    def test_insert_at_tail_for_single_node_list(self):
-        """Test function insert_at_tail in the case of a single node list"""
+    def test_insert_tail_single_node_updates_pointers(self):
+        """Tests insert_at_tail on a single-node list.
+        
+        Verifies node connections and head/tail pointers are updated.
+        """
         player_list = PlayerList()
         node1 = PlayerNode(Player("20", "John Smith"))
         node2 = PlayerNode(Player("23", "Stephen Curry"))
@@ -72,8 +86,11 @@ class TestPlayerClass(unittest.TestCase):
         self.assertEqual(player_list.tail.key, node2.key)
         self.assertEqual(player_list.tail.prev.key, node1.key)
 
-    def test_insert_at_tail_for_multiple_node_list(self):
-        """Test function insert_at_tail in the case of a multiple node list"""
+    def test_insert_tail_multiple_nodes_maintains_links(self):
+        """Tests insert_at_tail on a multi-node list.
+        
+        Verifies node connections and head/tail pointers are updated.
+        """
         player_list = PlayerList()
         node1 = PlayerNode(Player("20", "John Smith"))
         node2 = PlayerNode(Player("23", "Stephen Curry"))
@@ -89,8 +106,11 @@ class TestPlayerClass(unittest.TestCase):
         self.assertEqual(player_list.head.next.next.key, node3.key)
         self.assertEqual(player_list.tail.key, node3.key)
 
-    def test_delete_head(self):
-        """Test function delete_at_head deletes first element correctly"""
+    def test_delete_head_updates_list_structure(self):
+        """Tests delete_head functionality.
+        
+        Verifies head pointer updates and node connections after deletion.
+        """
         player_list = PlayerList()
         node1 = PlayerNode(Player("20", "John Smith"))
         node2 = PlayerNode(Player("23", "Stephen Curry"))
@@ -108,8 +128,11 @@ class TestPlayerClass(unittest.TestCase):
         self.assertEqual(player_list.head.key, node3.key)
         self.assertEqual(player_list.tail.key, node3.key)
 
-    def test_delete_tail(self):
-        """Test function delete_at_head deletes first element correctly"""
+    def test_delete_tail_updates_list_structure(self):
+        """Tests delete_tail functionality.
+        
+        Verifies tail pointer updates and node connections after deletion.
+        """
         player_list = PlayerList()
         node1 = PlayerNode(Player("20", "John Smith"))
         node2 = PlayerNode(Player("23", "Stephen Curry"))
@@ -126,8 +149,11 @@ class TestPlayerClass(unittest.TestCase):
         self.assertEqual(player_list.head.key, node3.key)
         self.assertEqual(player_list.tail.key, node3.key)
 
-    def test_delete_node_with_key(self):
-        """Test function delete_at_head deletes correctly when given key"""
+    def test_delete_by_key_handles_all_positions(self):
+        """Tests delete_node_with_key functionality.
+        
+        Verifies successful deletion of existing keys and handling of non-existent keys.
+        """
         player_list = PlayerList()
         node1 = PlayerNode(Player("20", "John Smith"))
         node2 = PlayerNode(Player("23", "Stephen Curry"))
@@ -146,8 +172,12 @@ class TestPlayerClass(unittest.TestCase):
 
         self.assertTrue(player_list.delete_node_with_key("20"))
 
-    def test_display_runs(self):
-        """Tests the display function runs, but does not test output"""
+    def test_display_executes_without_error(self):
+        """Tests that display method executes without errors.
+        
+        Note:
+            Visual inspection of output required for full verification.
+        """
         player_list = PlayerList()
         node1 = PlayerNode(Player("20", "John Smith"))
         node2 = PlayerNode(Player("23", "Stephen Curry"))
@@ -157,5 +187,5 @@ class TestPlayerClass(unittest.TestCase):
         player_list.insert_at_tail(node2)
         player_list.insert_at_tail(node3)
 
-        player_list.display()
+        player_list.display(False)
         # Visually inspect printed output. (difficult to test)
