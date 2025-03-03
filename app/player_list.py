@@ -1,4 +1,5 @@
 from __future__ import annotations
+from player import Player
 from player_node import PlayerNode
 
 class PlayerList:
@@ -110,6 +111,29 @@ class PlayerList:
                     return True
         return False
 
+    def display(self, forward: bool = True) -> None:
+        """Display the list items in forward or reverse order"""
+        if self.is_empty:
+            print("Empty list")
+            return
+
+        output = ""
+
+        if forward is True:
+            # Use the regular iterator
+            nodes = self
+        elif forward is False:
+            # Use the reverse iterator
+            nodes = reversed(self)
+        else:
+            raise TypeError("forward parameter must be a boolean.")
+
+        for node in nodes:
+            output += f"{node.key}'{node.name}'->"
+
+        print(output[:-2]) # Remove the final '->' by slicing
+
+
     def __iter__(self):
         """Makes PlayerList into a iterable object, using a generator and yield"""
         current = self._head
@@ -117,3 +141,9 @@ class PlayerList:
             yield current
             current = current.next
 
+    def __reversed__(self):
+        """Makes PlayerList work with Python's built-in reversed() function"""
+        current = self._tail
+        while current is not None:
+            yield current
+            current = current.prev

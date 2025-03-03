@@ -38,6 +38,11 @@ class PlayerNode:
         """Return the uid of the player in a node"""
         return self._player.uid
 
+    @property
+    def name(self):
+        """Return the name of the player in a node"""
+        return self._player.name
+
     def __str__(self):
         """Human-readable string of PlayerNode"""
         return f"PlayerNode id: {self.key}, next: {self._next}, prev:{self._prev}"

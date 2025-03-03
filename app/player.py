@@ -34,6 +34,9 @@ class PlayerUID:
     def __delete__(self, instance):
         raise AttributeError("Cannot delete player UID")
 
+    def __str__(self):
+        return self
+
 
 class PlayerName:
     """

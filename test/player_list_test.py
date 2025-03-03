@@ -146,4 +146,16 @@ class TestPlayerClass(unittest.TestCase):
 
         self.assertTrue(player_list.delete_node_with_key("20"))
 
+    def test_display_runs(self):
+        """Tests the display function runs, but does not test output"""
+        player_list = PlayerList()
+        node1 = PlayerNode(Player("20", "John Smith"))
+        node2 = PlayerNode(Player("23", "Stephen Curry"))
+        node3 = PlayerNode(Player("42", "Douglas Adams"))
 
+        player_list.insert_at_tail(node1)
+        player_list.insert_at_tail(node2)
+        player_list.insert_at_tail(node3)
+
+        player_list.display()
+        # Visually inspect printed output. (difficult to test)
