@@ -21,6 +21,11 @@ class TestPlayerClass(unittest.TestCase):
         player.name = " David Smith "
         self.assertEqual(player.name, "David Smith")
 
+    def test_uid__with_leading_zeroes(self):
+        """Test that leading zeroes is properly stripped from uids"""
+        player = Player("007", "Charlie")
+        self.assertEqual(player.uid, "7")
+
     def test_invalid_uid(self):
         """Test that players can be created with valid inputs"""
         # Test integer UID

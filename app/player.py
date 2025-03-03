@@ -28,8 +28,8 @@ class PlayerUID:
         if int_value <= 0:
             raise ValueError("Player UID must be a positive integer")
 
-        # if valid set to original stripped string.
-        setattr(instance, self.name, value)
+        # if valid set to str version of the integer (removes leading 0's)
+        setattr(instance, self.name, str(int_value))
 
     def __delete__(self, instance):
         raise AttributeError("Cannot delete player UID")
