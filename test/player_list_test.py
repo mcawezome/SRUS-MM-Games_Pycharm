@@ -17,8 +17,7 @@ class TestPlayerClass(unittest.TestCase):
     def test_insert_at_head_for_empty_list(self):
         """Test function insert_at_head in the case of an empty list"""
         player_list = PlayerList()
-        player = Player("20", "John Smith")
-        node1 = PlayerNode(player)
+        node1 = PlayerNode(Player("20", "John Smith"))
         player_list.insert_at_head(node1)
         # test the keys only because prev and next should have changed from the original node
         self.assertEqual(player_list.head.key, node1.key)
@@ -43,7 +42,7 @@ class TestPlayerClass(unittest.TestCase):
         player_list = PlayerList()
         node1 = PlayerNode(Player("20", "John Smith"))
         node2 = PlayerNode(Player("23", "Stephen Curry"))
-        node3 = PlayerNode(Player("42", "Douglad Adams"))
+        node3 = PlayerNode(Player("42", "Douglas Adams"))
         player_list.insert_at_head(node1)
         player_list.insert_at_head(node2)
         player_list.insert_at_head(node3)
@@ -51,3 +50,45 @@ class TestPlayerClass(unittest.TestCase):
         self.assertEqual(player_list.head.next.key, node2.key)
         self.assertEqual(player_list.head.prev.key, node1.key)
         self.assertEqual(player_list.tail.key, node1.key)
+
+    def test_insert_at_tail_for_empty_list(self):
+        """Test function insert_at_tail in the case of an empty list"""
+        player_list = PlayerList()
+        node1 = PlayerNode(Player("20", "John Smith"))
+        player_list.insert_at_tail(node1)
+        self.assertEqual(player_list.head.key, node1.key)
+        self.assertEqual(player_list.tail.key, node1.key)
+        self.assertEqual(player_list.head.next, None)
+        self.assertEqual(player_list.head.prev, None)
+
+    def test_insert_at_tail_for_single_node_list(self):
+        """Test function insert_at_tail in the case of a single node list"""
+        player_list = PlayerList()
+        node1 = PlayerNode(Player("20", "John Smith"))
+        node2 = PlayerNode(Player("23", "Stephen Curry"))
+        player_list.insert_at_tail(node1)
+        player_list.insert_at_tail(node2)
+        self.assertEqual(player_list.head.key, node1.key)
+        self.assertEqual(player_list.head.next.key, node2.key)
+        self.assertEqual(player_list.head.prev.key, node2.key)
+        self.assertEqual(player_list.tail.key, node2.key)
+        self.assertEqual(player_list.tail.next.key, node1.key)
+        self.assertEqual(player_list.tail.prev.key, node1.key)
+
+    def test_insert_at_tail_for_multiple_node_list(self):
+        """Test function insert_at_tail in the case of a multiple node list"""
+        player_list = PlayerList()
+        node1 = PlayerNode(Player("20", "John Smith"))
+        node2 = PlayerNode(Player("23", "Stephen Curry"))
+        node3 = PlayerNode(Player("42", "Douglas Adams"))
+        player_list.insert_at_tail(node1)
+        player_list.insert_at_tail(node2)
+
+        self.assertEqual(player_list.head.key, node1.key)
+        self.assertEqual(player_list.head.next.key, node2.key)
+        self.assertEqual(player_list.tail.key, node2.key)
+
+        player_list.insert_at_tail(node3)
+        self.assertEqual(player_list.head.next.next.key, node3.key)
+        self.assertEqual(player_list.tail.key, node3.key)
+
