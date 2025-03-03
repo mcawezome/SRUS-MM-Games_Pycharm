@@ -16,21 +16,21 @@ class PlayerNode:
     # nodes represent fixed player entities, replace not modify
 
     @property
-    def next_node(self) -> PlayerNode | None:
+    def next(self) -> PlayerNode | None:
         """Get or set the next PlayerNode in the linked structure."""
         return self._next
 
-    @next_node.setter
-    def next_node(self, value: PlayerNode | None) -> None:
+    @next.setter
+    def next(self, value: PlayerNode | None) -> None:
         self._next = value
 
     @property
-    def prev_node(self) -> PlayerNode | None:
+    def prev(self) -> PlayerNode | None:
         """Get or set the previous PlayerNode in the linked structure."""
         return self._prev
 
-    @prev_node.setter
-    def prev_node(self, value: PlayerNode | None) -> None:
+    @prev.setter
+    def prev(self, value: PlayerNode | None) -> None:
         self._prev = value
 
     @property
