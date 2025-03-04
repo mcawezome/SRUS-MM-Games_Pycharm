@@ -90,6 +90,28 @@ class PlayerList:
         self._tail = node
         self._length += 1
 
+    def insert_at_position(self, node: PlayerNode, position: int) -> None:
+        """Inserts a PlayerNode at a specific position in the list.
+
+        Args:
+            node: The PlayerNode to insert.
+            position: The position to insert the node at.
+        """
+        if position < 0 or position > self.length:
+            raise IndexError("Invalid position")
+        if position == 0:
+            self.insert_at_head(node)
+            return
+        if position == self.length:
+            self.insert_at_tail(node)
+            return
+        current = self._head
+        for _ in range(position - 1):
+            current = current.next
+        node.next = current.next
+        node.prev = current
+        current.next.prev = node
+
     def delete_head(self) -> None:
         """Removes the first node in the list.
 
@@ -129,6 +151,21 @@ class PlayerList:
         self._tail = new_tail
         self._length -= 1
 
+    def find_node_with_key(self, key: str) -> PlayerNode | None:
+        """Finds the first node with the specified key.
+
+        Args:
+            key: The key to search for.
+
+        Returns:
+            PlayerNode or None: The first node with the specified key, or None if not found.
+        """
+        for node in self:
+            if node.key == key:
+                return node
+        return None
+
+
     def delete_node_with_key(self, key: str) -> bool:
         """Deletes the first node with the specified key.
 
@@ -138,21 +175,21 @@ class PlayerList:
         Returns:
             bool: True if a node was found and deleted, False otherwise.
         """
-        for node in self:
-            if node.key == key:
-                if node == self._head:
-                    self.delete_head()
-                    # delete_head() already decrements length
-                    return True
-                if node == self._tail:
-                    self.delete_tail()
-                    # delete_tail() already decrements length
-                    return True
-                else:
-                    node.prev.next = node.next
-                    node.next.prev = node.prev
-                    self._length -= 1
-                    return True
+        node = self.find_node_with_key(key)
+        if node is not None:
+            if node == self._head:
+                self.delete_head()
+                # delete_head() already decrements length
+                return True
+            if node == self._tail:
+                self.delete_tail()
+                # delete_tail() already decrements length
+                return True
+            else:
+                node.prev.next = node.next
+                node.next.prev = node.prev
+                self._length -= 1
+                return True
         return False
 
     def display(self, forward: bool = True) -> None:
