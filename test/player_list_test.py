@@ -123,3 +123,88 @@ class TestPlayerList(unittest.TestCase):
 
         self.player_list.display(False)
         # Visually inspect printed output. (difficult to test)
+
+    def test_insert_at_position_empty_list(self):
+        """Tests insert_at_position on an empty list."""
+        self.player_list.insert_at_position(self.node1, 0)
+        self.assertEqual(self.player_list.head.key, self.node1.key)
+        self.assertEqual(self.player_list.tail.key, self.node1.key)
+        self.assertEqual(self.player_list.length, 1)
+
+    def test_insert_at_position_invalid_position(self):
+        """Tests insert_at_position with invalid positions."""
+        with self.assertRaises(IndexError):
+            self.player_list.insert_at_position(self.node1, -1)
+        
+        with self.assertRaises(IndexError):
+            self.player_list.insert_at_position(self.node1, 1)  # Empty list
+
+        self.player_list.insert_at_tail(self.node1)
+        with self.assertRaises(IndexError):
+            self.player_list.insert_at_position(self.node2, 2)  # Beyond length
+
+    def test_insert_at_position_middle(self):
+        """Tests insert_at_position in the middle of the list."""
+        self.player_list.insert_at_tail(self.node1)  # [node1]
+        self.player_list.insert_at_tail(self.node3)  # [node1, node3]
+        self.player_list.insert_at_position(self.node2, 1)  # [node1, node2, node3]
+
+        self.assertEqual(self.player_list.head.next.key, self.node2.key)
+        self.assertEqual(self.player_list.head.next.prev.key, self.node1.key)
+        self.assertEqual(self.player_list.head.next.next.key, self.node3.key)
+        self.assertEqual(self.player_list.length, 3)
+
+    def test_find_node_with_key_empty_list(self):
+        """Tests find_node_with_key on an empty list."""
+        self.assertIsNone(self.player_list.find_node_with_key("20"))
+
+    def test_find_node_with_key_existing(self):
+        """Tests find_node_with_key with existing keys."""
+        self.player_list.insert_at_tail(self.node1)
+        self.player_list.insert_at_tail(self.node2)
+        self.player_list.insert_at_tail(self.node3)
+
+        found_node = self.player_list.find_node_with_key("23")
+        self.assertEqual(found_node.key, self.node2.key)
+        self.assertEqual(found_node.name, self.node2.name)
+
+    def test_find_node_with_key_not_found(self):
+        """Tests find_node_with_key with non-existent key."""
+        self.player_list.insert_at_tail(self.node1)
+        self.player_list.insert_at_tail(self.node2)
+        
+        self.assertIsNone(self.player_list.find_node_with_key("999"))
+
+    def test_forward_iteration(self):
+        """Tests forward iteration through the list."""
+        self.player_list.insert_at_tail(self.node1)
+        self.player_list.insert_at_tail(self.node2)
+        self.player_list.insert_at_tail(self.node3)
+
+        expected_keys = ["20", "23", "42"]
+        for node, expected_key in zip(self.player_list, expected_keys):
+            self.assertEqual(node.key, expected_key)
+
+    def test_reverse_iteration(self):
+        """Tests reverse iteration through the list."""
+        self.player_list.insert_at_tail(self.node1)
+        self.player_list.insert_at_tail(self.node2)
+        self.player_list.insert_at_tail(self.node3)
+
+        expected_keys = ["42", "23", "20"]
+        for node, expected_key in zip(reversed(self.player_list), expected_keys):
+            self.assertEqual(node.key, expected_key)
+
+    def test_iteration_empty_list(self):
+        """Tests iteration on empty list."""
+        items = list(self.player_list)
+        self.assertEqual(len(items), 0)
+
+        reversed_items = list(reversed(self.player_list))
+        self.assertEqual(len(reversed_items), 0)
+
+    def test_display_empty_list(self):
+        """Tests display method with empty list."""
+        self.player_list.display()  # Forward
+        self.player_list.display(False)  # Backward
+        # Visual inspection needed, but should not raise errors

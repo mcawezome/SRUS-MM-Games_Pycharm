@@ -16,6 +16,8 @@ class PlayerNode:
         self._next = next_node
         self._prev = prev_node
 
+    # No setter for player - making it read-only
+    # Names are fixed for nodes, they are replaced not modified.
     @property
     def player(self) -> Player:
         """Gets the Player object stored in this node.
@@ -25,8 +27,7 @@ class PlayerNode:
         """
         return self._player
 
-    # No setter for player - making it read-only
-    # nodes represent fixed player entities, replace not modify
+
 
     @property
     def next(self) -> PlayerNode | None:

@@ -58,8 +58,6 @@ class PlayerList:
         if self.is_empty:
             self._head = node
             self._tail = node
-            node.next = None  # Ensure node's pointers are set correctly
-            node.prev = None
             self._length += 1
             return
 
