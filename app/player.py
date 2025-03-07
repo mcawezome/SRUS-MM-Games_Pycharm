@@ -120,7 +120,7 @@ class PlayerName:
             instance: The Player instance.
         """
         # Reset to default name when deleted
-        setattr(instance, self.name, "Anonymous")
+        setattr(instance, self.name, "No Name")
 
 
 class Player:

@@ -57,6 +57,8 @@ class PlayerNode:
         Args:
             value: The PlayerNode to set as next, or None to clear the reference.
         """
+        if value is not None and not isinstance(value, PlayerNode):
+            raise TypeError("value must be type PlayerNode")
         self._next = value
 
     @property
@@ -75,6 +77,8 @@ class PlayerNode:
         Args:
             value: The PlayerNode to set as previous, or None to clear the reference.
         """
+        if value is not None and not isinstance(value, PlayerNode):
+            raise TypeError("Node mut be type PlayerNode")
         self._prev = value
 
     @property

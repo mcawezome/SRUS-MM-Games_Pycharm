@@ -9,7 +9,7 @@ class TestPlayerClass(unittest.TestCase):
     """
 
     def setUp(self):
-        """Initialize test fixtures before each test method."""
+        """Initialize examples used in each test method."""
         self.player = Player("1", "Anthony Albanese")
         self.next_node = PlayerNode(Player("2", "John Howard"))
         self.prev_node = PlayerNode(Player("3", "Bob Hawk"))
@@ -38,6 +38,18 @@ class TestPlayerClass(unittest.TestCase):
         self.assertEqual(self.node.next, self.next_node)
         self.node.next = None
         self.assertIsNone(self.node.next)
+
+    def test_invalid_next_type(self):
+        with self.assertRaises(TypeError):
+            self.node.next = 1  # Test with integer
+        with self.assertRaises(TypeError):
+            self.node.prev = "hello"  # Test with string
+
+    def test_invalid_prev_type(self):
+        with self.assertRaises(TypeError):
+            self.node.prev = -1  # Test with integer
+        with self.assertRaises(TypeError):
+            self.node.prev = "hello#$"  # Test with string
 
     def test_prev_property(self):
         """Test previous node property getter and setter."""

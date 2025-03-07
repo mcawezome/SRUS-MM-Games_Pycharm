@@ -121,6 +121,7 @@ class TestPlayerList(unittest.TestCase):
         self.player_list.insert_at_tail(self.node2)
         self.player_list.insert_at_tail(self.node3)
 
+        self.player_list.display()
         self.player_list.display(False)
         # Visually inspect printed output. (difficult to test)
 
@@ -149,7 +150,9 @@ class TestPlayerList(unittest.TestCase):
         self.player_list.insert_at_tail(self.node3)  # [node1, node3]
         self.player_list.insert_at_position(self.node2, 1)  # [node1, node2, node3]
 
+        self.assertEqual(self.player_list.head.key, self.node1.key)
         self.assertEqual(self.player_list.head.next.key, self.node2.key)
+        self.assertEqual(self.player_list.tail.key, self.node3.key)
         self.assertEqual(self.player_list.head.next.prev.key, self.node1.key)
         self.assertEqual(self.player_list.head.next.next.key, self.node3.key)
         self.assertEqual(self.player_list.length, 3)
@@ -164,7 +167,7 @@ class TestPlayerList(unittest.TestCase):
         self.player_list.insert_at_tail(self.node2)
         self.player_list.insert_at_tail(self.node3)
 
-        found_node = self.player_list.find_node_with_key("23")
+        found_node = self.player_list.find_node_with_key(self.node2.key)
         self.assertEqual(found_node.key, self.node2.key)
         self.assertEqual(found_node.name, self.node2.name)
 

@@ -60,9 +60,9 @@ class TestPlayerClass(unittest.TestCase):
 
     def test_delete_attributes(self):
         """Test deleting attributes"""
-        # Test deleting name (should set to "Anonymous")
+        # Test deleting name (should set to "No Name")
         del self.player3.name
-        self.assertEqual(self.player3.name, "Anonymous")
+        self.assertEqual(self.player3.name, "No Name")
 
         # Test deleting UID (should raise AttributeError)
         with self.assertRaises(AttributeError):

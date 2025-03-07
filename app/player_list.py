@@ -1,5 +1,4 @@
 from __future__ import annotations
-from player import Player
 from player_node import PlayerNode
 
 class PlayerList:
@@ -56,7 +55,7 @@ class PlayerList:
             node: The PlayerNode to insert.
         """
         # We are passing nodes rather than values
-        # because then input is already sanitised by Player's descriptors.
+        # Because then input is already sanitised by Player's descriptors.
         if self.is_empty:
             self._head = node
             self._tail = node
@@ -111,13 +110,12 @@ class PlayerList:
         current = self._head
         for _ in range(position - 1):
             current = current.next
+        # set up node by setting to current next and prev
         node.next = current.next
         node.prev = current
+        # update current pointers
         current.next.prev = node
         current.next = node
-        
-        node.prev = current
-        current.next.prev = node
 
         self._length += 1
 
