@@ -60,3 +60,10 @@ class TestPlayerClass(unittest.TestCase):
         self.node.prev = self.prev_node
         expected = "PlayerNode id: 1, next: 2, prev: 3"
         self.assertEqual(repr(self.node), expected)
+
+    def test_invalid_player_type(self):
+        """Test that PlayerNode raises TypeError for invalid player type."""
+        with self.assertRaises(TypeError):
+            PlayerNode("not a player")  # Test with string
+        with self.assertRaises(TypeError):
+            PlayerNode(None)  # Test with None

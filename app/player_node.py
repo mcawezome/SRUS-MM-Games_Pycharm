@@ -12,6 +12,18 @@ class PlayerNode:
     """
 
     def __init__(self, player: Player, next_node: PlayerNode | None = None, prev_node: PlayerNode | None = None):
+        """Initialize a PlayerNode.
+
+        Args:
+            player: The Player object stored in this node.
+            next_node: Reference to the next PlayerNode, if any.
+            prev_node: Reference to the previous PlayerNode, if any.
+
+        Raises:
+            TypeError: If player is not a Player instance.
+        """
+        if not isinstance(player, Player):
+            raise TypeError("player must be an instance of Player")
         self._player = player
         self._next = next_node
         self._prev = prev_node
@@ -66,20 +78,20 @@ class PlayerNode:
         self._prev = value
 
     @property
-    def key(self):
+    def key(self) -> str:
         """Gets the unique identifier of the player in this node.
 
         Returns:
-            The player's uid.
+            str: The player's uid.
         """
         return self._player.uid
 
     @property
-    def name(self):
+    def name(self) -> str:
         """Gets the name of the player in this node.
 
         Returns:
-            The player's name.
+            str: The player's name.
         """
         return self._player.name
 

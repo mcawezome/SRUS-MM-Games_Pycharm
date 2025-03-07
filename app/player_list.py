@@ -8,7 +8,9 @@ class PlayerList:
     The list maintains head and tail pointers and tracks its length.
     """
     def __init__(self) -> None:
+        """Initialize an empty player list."""
         self._head = None
+        self._tail = None
         self._length = 0
 
     @property
@@ -93,7 +95,10 @@ class PlayerList:
 
         Args:
             node: The PlayerNode to insert.
-            position: The position to insert the node at.
+            position: The position to insert the node at (0-based).
+
+        Raises:
+            IndexError: If position is invalid.
         """
         if position < 0 or position > self.length:
             raise IndexError("Invalid position")
@@ -109,6 +114,12 @@ class PlayerList:
         node.next = current.next
         node.prev = current
         current.next.prev = node
+        current.next = node
+        
+        node.prev = current
+        current.next.prev = node
+
+        self._length += 1
 
     def delete_head(self) -> None:
         """Removes the first node in the list.
