@@ -144,6 +144,21 @@ class Player:
         self.uid = uid
         self.name = name
 
+    @staticmethod
+    def hash_djb3(self, key: str) -> int:
+        hash_value = 5381
+        for char in key:
+            hash_value = ((hash_value << 5) + hash_value) + ord(char)
+            # The & 0xFFFFFFFF ensures the hash stays within 32-bit bounds
+            hash_value &= 0xFFFFFFFF
+        return hash_value
+
+    def hash(self, key):
+        return self.hash_djb3(key)
+
+    def __hash__(self):
+        return self.hash_djb3(self.uid)
+
     def __repr__(self):
         """Returns the string representation of the Player instance.
 

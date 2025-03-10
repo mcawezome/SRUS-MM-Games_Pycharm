@@ -1,9 +1,12 @@
+from player_list import PlayerList
+
 class PlayerHashMap:
     def __init__(self):
-        pass
+        self.SIZE = 10
+        self.hashmap = [PlayerList() for _ in range(self.SIZE)]
 
     def __len__(self):
-        pass
+        return len(self.hashmap) # TODO: check this for empty players
 
     def __setitem__(self, key, name):
         pass
