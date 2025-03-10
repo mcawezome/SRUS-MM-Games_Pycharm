@@ -144,8 +144,8 @@ class Player:
         self.uid = uid
         self.name = name
 
-    @staticmethod
-    def hash_djb3(self, key: str) -> int:
+    @classmethod
+    def hash_djb3(cls, key: str) -> int:
         hash_value = 5381
         for char in key:
             hash_value = ((hash_value << 5) + hash_value) + ord(char)
@@ -153,11 +153,15 @@ class Player:
             hash_value &= 0xFFFFFFFF
         return hash_value
 
-    def hash(self, key):
-        return self.hash_djb3(key)
+    # def hash(self, key):
+    #     return self.hash_djb3(key)
+    # is this not needed?
 
     def __hash__(self):
         return self.hash_djb3(self.uid)
+
+    def __eq__(self, other):
+        return self.uid == other.ui
 
     def __repr__(self):
         """Returns the string representation of the Player instance.
