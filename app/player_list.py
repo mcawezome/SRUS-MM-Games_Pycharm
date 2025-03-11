@@ -242,3 +242,11 @@ class PlayerList:
         while current is not None:
             yield current
             current = current.prev
+
+    def __len__(self) -> int:
+        """Returns the number of nodes in the list.
+
+        Returns:
+            int: The current length of the list.
+        """
+        return self._length

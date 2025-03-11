@@ -48,8 +48,8 @@ class PlayerUID:
         else:
             raise TypeError("Player UID must be a string.")
 
-        # Validate uid is a positive integer
-        if int_value <= 0:
+        # Validate uid is an integer
+        if int_value < 0:
             raise ValueError("Player UID must be a positive integer")
 
         # if valid set to str version of the integer (removes leading 0's)
@@ -146,21 +146,43 @@ class Player:
 
     @classmethod
     def hash_djb3(cls, key: str) -> int:
+        """Implements the DJB2 hash algorithm for string keys.
+
+        Args:
+            key: String to be hashed.
+
+        Returns:
+            int: 32-bit hash value.
+        """
         hash_value = 5381
         for char in key:
             hash_value = ((hash_value << 5) + hash_value) + ord(char)
-            # The & 0xFFFFFFFF ensures the hash stays within 32-bit bounds
             hash_value &= 0xFFFFFFFF
         return hash_value
 
-    def __hash__(self, key=None):
+    def __hash__(self, key: str | None = None) -> int:
+        """Generates a hash value for the Player instance.
+
+        Args:
+            key: Optional string to hash. If None, uses player's uid.
+
+        Returns:
+            int: Hash value using DJB2 algorithm.
+        """
         if key is None:
             return self.hash_djb3(self.uid)
-        else:
-            return self.hash_djb3(key)
+        return self.hash_djb3(key)
 
-    def __eq__(self, other):
-        return self.uid == other.ui
+    def __eq__(self, other: 'Player') -> bool:
+        """Checks if two Player instances are equal.
+
+        Args:
+            other: Another Player instance to compare with.
+
+        Returns:
+            bool: True if players have the same uid, False otherwise.
+        """
+        return self.uid == other.uid
 
     def __repr__(self):
         """Returns the string representation of the Player instance.
