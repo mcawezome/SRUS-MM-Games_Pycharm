@@ -64,10 +64,10 @@ class PlayerHashMap:
             raise KeyError(f"No player found with key: {key}")
 
     def display(self) -> None:
-        """Display a message to console including contents of hashamap"""
+        """Display a message to console including contents of hash map"""
         default = PlayerList()
         for index, player_list in enumerate(self.hashmap):
-            if player_list != default: # TODO: Fix, ensure only display if player_list is full.
+            if player_list.is_empty is False:
                 print(f"{index=}, {player_list=!r}")
 
 
