@@ -173,7 +173,7 @@ class PlayerList:
         return None
 
     def find_index_with_key(self, key: str) -> int | None:
-        for index, node in self:
+        for index, node in enumerate(self):
             if node.key == key:
                 return index
         return None

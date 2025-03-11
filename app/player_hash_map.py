@@ -2,6 +2,7 @@ from player_list import PlayerList
 from player import Player
 from player_node import PlayerNode
 
+
 class PlayerHashMap:
     def __init__(self) -> None:
         """
@@ -19,28 +20,21 @@ class PlayerHashMap:
             # TODO: Really don't like calling hash_djb3 from outside the Player class.
 
     def __len__(self) -> int:
-        return len(self.hashmap) # TODO: test this for empty players
+        # Count total number of players across all lists
+        total = 0
+        for player_list in self.hashmap:
+            total += len(player_list)
+        return total
 
-    def __setitem__(self, index, key, name) -> None:
+    def __setitem__(self, key, value) -> None:
         """
-            ''' Psuedo code:
-        1. Use the key to calculate an index into the hash map
-           (TODO: Implement a hash function in the Player class that returns a player hash and then modulate it by the size of the hashmap)
-        2. Get the PlayerList at that index
-        3. Check if the player is already on that player list.
-             If it is, update the player's name.
-             If it isn't, create a player and add the player to the player list.
-
-         '''
-         # get the player's appropriate PlayerList:
-         player_list = self.hashmap[self.get_index(key)]
-         # check if the player is in the list
-         # If it is, update the player's name
-         # If it isn't, create a player and add the player to the player list
+        Add or update a player in the hash map
+        key: player ID as string
+        value: player name as string
         """
         player_list = self.hashmap[self.get_index(key)]
         result = player_list.find_node_with_key(key)
-        player_node = PlayerNode(Player(key, name))
+        player_node = PlayerNode(Player(key, value))
         if result is not None:
             # We need to update name.
             # The below implementation creates a new node and replaces the node with old name.
@@ -51,35 +45,49 @@ class PlayerHashMap:
         else:
             player_list.insert_at_tail(player_node)
 
-
-    def __getitem__(self, index):
-        result = self.hashmap[index]
+    def __getitem__(self, key):
+        """
+        Get a player by key (player ID)
+        """
+        player_list = self.hashmap[self.get_index(key)]
+        result = player_list.find_node_with_key(key)
         if result is None:
-            raise IndexError(f"Cannot retrieve, no PlayerList found at index: {index}")
-        return result
+            raise KeyError(f"No player found with key: {key}")
+        return result.player.name
 
-    def __delitem__(self, index):
-        if self.hashmap[index] is None:
-            raise IndexError(f"Cannot delete, no PlayerList found at index: {index}")
-        del self.hashmap[index]
+    def __delitem__(self, key):
+        """
+        Delete a player by key (player ID)
+        """
+        player_list = self.hashmap[self.get_index(key)]
+        if not player_list.delete_node_with_key(key):
+            raise KeyError(f"No player found with key: {key}")
 
     def display(self) -> None:
-        for index, player_list in enumerate(self):
-            print(f"{index=}, {player_list=}")
+        """Display a message to console including contents of hashamap"""
+        default = PlayerList()
+        for index, player_list in enumerate(self.hashmap):
+            if player_list != default: # TODO: Fix, ensure only display if player_list is full.
+                print(f"{index=}, {player_list=!r}")
+
 
 if __name__ == "__main__":
     phm = PlayerHashMap()
-    player_list = PlayerList()
-    node1 = PlayerNode(Player("20", "John Smith"))
-    node2 = PlayerNode(Player("23", "Stephen Curry"))
-    node3 = PlayerNode(Player("42", "Douglas Adams"))
-    player_list.insert_at_tail(node1)
-    player_list.insert_at_tail(node2)
-    player_list.insert_at_tail(node3)
-    player_list2 = PlayerList()
-    player_list.insert_at_tail(node3)
-    player_list.insert_at_tail(node2)
-    player_list.insert_at_tail(node1)
-    phm[0] = player_list
-    phm[1] = player_list2
+
+    # Adding players directly to the hash map
+    phm["20"] = "John Smith"
+    phm["23"] = "Stephen Curry"
+    phm["42"] = "Douglas Adams"
+
+    # Display the hash map
     phm.display()
+
+    # Example of retrieval
+    print(f"Player with ID '23': {phm['23']}")
+
+    # Update a player's name
+    phm["42"] = "Jackie Robinson"
+    # Display again after update
+    phm.display()
+
+    print(phm['12'])
