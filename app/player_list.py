@@ -204,6 +204,9 @@ class PlayerList:
                 return True
         return False
 
+    def __repr__(self):
+        return " -> ".join(f"{node.key}'{node.name}'" for node in list(self))
+
     def display(self, forward: bool = True) -> None:
         """Prints the list contents to console.
 
@@ -217,7 +220,6 @@ class PlayerList:
 
         output = " -> ".join(f"{node.key}'{node.name}'" for node in nodes)
         print(output)
-
 
     def __iter__(self):
         """Implements forward iteration through the list.

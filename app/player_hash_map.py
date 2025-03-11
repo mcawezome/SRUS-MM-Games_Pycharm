@@ -15,12 +15,13 @@ class PlayerHashMap:
         if isinstance(key, Player):
             return hash(key) % self.SIZE
         else:
-            return Player.hash(key) % self.SIZE  # TODO ensure hash is a class method in Player
+            return Player.hash_djb3(key) % self.SIZE  # TODO ensure hash is a class method in Player
+            # TODO: Really don't like calling hash_djb3 from outside the Player class.
 
     def __len__(self) -> int:
         return len(self.hashmap) # TODO: test this for empty players
 
-    def __setitem__(self, key, name) -> None:
+    def __setitem__(self, index, key, name) -> None:
         """
             ''' Psuedo code:
         1. Use the key to calculate an index into the hash map
@@ -62,6 +63,23 @@ class PlayerHashMap:
             raise IndexError(f"Cannot delete, no PlayerList found at index: {index}")
         del self.hashmap[index]
 
-    # def display(self) -> None:
-    #     for index, player_list in enumerate(self):
-    #         print(f"{index=}, ")
+    def display(self) -> None:
+        for index, player_list in enumerate(self):
+            print(f"{index=}, {player_list=}")
+
+if __name__ == "__main__":
+    phm = PlayerHashMap()
+    player_list = PlayerList()
+    node1 = PlayerNode(Player("20", "John Smith"))
+    node2 = PlayerNode(Player("23", "Stephen Curry"))
+    node3 = PlayerNode(Player("42", "Douglas Adams"))
+    player_list.insert_at_tail(node1)
+    player_list.insert_at_tail(node2)
+    player_list.insert_at_tail(node3)
+    player_list2 = PlayerList()
+    player_list.insert_at_tail(node3)
+    player_list.insert_at_tail(node2)
+    player_list.insert_at_tail(node1)
+    phm[0] = player_list
+    phm[1] = player_list2
+    phm.display()
