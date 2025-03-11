@@ -3,7 +3,11 @@ from player import Player
 from player_node import PlayerNode
 
 class PlayerHashMap:
-    def __init__(self):
+    def __init__(self) -> None:
+        """
+        Object containing a hashmap object (list containing PlayerLists)
+        Used for reducing time complexity of storing Players in a list
+        """
         self.SIZE = 10
         self.hashmap = [PlayerList() for _ in range(self.SIZE)]
 
@@ -13,10 +17,10 @@ class PlayerHashMap:
         else:
             return Player.hash(key) % self.SIZE  # TODO ensure hash is a class method in Player
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.hashmap) # TODO: test this for empty players
 
-    def __setitem__(self, key, name):
+    def __setitem__(self, key, name) -> None:
         """
             ''' Psuedo code:
         1. Use the key to calculate an index into the hash map
@@ -34,19 +38,30 @@ class PlayerHashMap:
          # If it isn't, create a player and add the player to the player list
         """
         player_list = self.hashmap[self.get_index(key)]
-        # TODO: ^ requires __getitem__
         result = player_list.find_node_with_key(key)
+        player_node = PlayerNode(Player(key, name))
         if result is not None:
-            # we need to update name (currently can't do this directly)
-            pass
+            # We need to update name.
+            # The below implementation creates a new node and replaces the node with old name.
+            # This allows us to keep name read-only in Player class.
+            index = player_list.find_index_with_key(key)
+            player_list.delete_node_with_key(key)
+            player_list.insert_at_position(player_node, index)
         else:
-            player_node = PlayerNode(Player(key, name))
             player_list.insert_at_tail(player_node)
 
 
+    def __getitem__(self, index):
+        result = self.hashmap[index]
+        if result is None:
+            raise IndexError(f"Cannot retrieve, no PlayerList found at index: {index}")
+        return result
 
-    def __getitem__(self, key):
-        pass
+    def __delitem__(self, index):
+        if self.hashmap[index] is None:
+            raise IndexError(f"Cannot delete, no PlayerList found at index: {index}")
+        del self.hashmap[index]
 
-    def __delitem__(self, key):
-        pass
+    # def display(self) -> None:
+    #     for index, player_list in enumerate(self):
+    #         print(f"{index=}, ")

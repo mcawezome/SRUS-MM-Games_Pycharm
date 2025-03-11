@@ -172,6 +172,11 @@ class PlayerList:
                 return node
         return None
 
+    def find_index_with_key(self, key: str) -> int | None:
+        for index, node in self:
+            if node.key == key:
+                return index
+        return None
 
     def delete_node_with_key(self, key: str) -> bool:
         """Deletes the first node with the specified key.

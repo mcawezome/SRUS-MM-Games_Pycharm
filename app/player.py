@@ -153,10 +153,9 @@ class Player:
             hash_value &= 0xFFFFFFFF
         return hash_value
 
-    # def hash(self, key):
-    #     return self.hash_djb3(key)
-    # is this not needed?
-
+    def hash(self, key):
+        return self.hash_djb3(key)
+    # TODO: Check with Raf, is this needed?
     def __hash__(self):
         return self.hash_djb3(self.uid)
 
