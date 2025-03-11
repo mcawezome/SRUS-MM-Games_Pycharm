@@ -86,7 +86,7 @@ if __name__ == "__main__":
     print(f"Player with ID '23': {phm['23']}")
 
     # Update a player's name
-    phm["42"] = "Jackie Robinson"
+    phm["42"] = "Joe"
     # Display again after update
     phm.display()
 

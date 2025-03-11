@@ -158,6 +158,7 @@ class Player:
         for char in key:
             hash_value = ((hash_value << 5) + hash_value) + ord(char)
             hash_value &= 0xFFFFFFFF
+            # bitwise AND on 32-bits of consecutive 1's. Everything after 32-bits is truncated.
         return hash_value
 
     def __hash__(self, key: str | None = None) -> int:
@@ -169,6 +170,7 @@ class Player:
         Returns:
             int: Hash value using DJB2 algorithm.
         """
+        # TODO: remove the optional key parameter
         if key is None:
             return self.hash_djb3(self.uid)
         return self.hash_djb3(key)
