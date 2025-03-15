@@ -145,7 +145,7 @@ class Player:
         self.name = name
 
     @classmethod
-    def hash_djb3(cls, key: str) -> int:
+    def hash(cls, key: str) -> int:
         """Implements the DJB2 hash algorithm for string keys.
 
         Args:
@@ -161,7 +161,7 @@ class Player:
             # bitwise AND on 32-bits of consecutive 1's. Everything after 32-bits is truncated.
         return hash_value
 
-    def __hash__(self, key: str | None = None) -> int:
+    def __hash__(self) -> int:
         """Generates a hash value for the Player instance.
 
         Args:
@@ -170,10 +170,7 @@ class Player:
         Returns:
             int: Hash value using DJB2 algorithm.
         """
-        # TODO: remove the optional key parameter
-        if key is None:
-            return self.hash_djb3(self.uid)
-        return self.hash_djb3(key)
+        return self.__class__.hash(self.uid)
 
     def __eq__(self, other: 'Player') -> bool:
         """Checks if two Player instances are equal.

@@ -16,8 +16,7 @@ class PlayerHashMap:
         if isinstance(key, Player):
             return hash(key) % self.SIZE
         else:
-            return Player.hash_djb3(key) % self.SIZE  # TODO ensure hash is a class method in Player
-            # TODO: Really don't like calling hash_djb3 from outside the Player class.
+            return Player.hash(key) % self.SIZE
 
     def __len__(self) -> int:
         # Count total number of players across all lists
@@ -65,7 +64,6 @@ class PlayerHashMap:
 
     def display(self) -> None:
         """Display a message to console including contents of hash map"""
-        default = PlayerList()
         for index, player_list in enumerate(self.hashmap):
             if player_list.is_empty is False:
                 print(f"{index=}, {player_list=!r}")
