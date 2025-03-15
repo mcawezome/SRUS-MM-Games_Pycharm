@@ -164,40 +164,70 @@ def pearson_hash(key: str, size: int) -> int:
 > hash_ could be an arbitrarily large number so modulo operation keeps it within index range.
 
 1. Write pseudocode of how you would store Players in PlayerLists in a hash map.
+> Giving example of Open Addressing instead of Chaining - which was used in Assessment Exercise.
+> Pseudocode has core elements glossing over certain method implementations
 ```pseudocode
-We need to create __hash__() function in Player
-When a player is to be inserted into PlayerList
-Class PlayerList:  
-Function initialise():
-     self.SIZE = 32
-     self.hash_map = self.SIZE multiple instances of empty list.
-Function insert(value)
-     if self.hash_map is full # python(if not (None in self.hash_map))
-         self.resize()
-     player = Player(value)
-     hashed_player = player.hash()
-     index_for_insert = hashed_player % self.length
-     player_index_tuple = (player, index_for_insert)
-     if self.hash_map[index_for_insert] is None or tombstone
-         self.hash_map[index_for_insert] = player_index_tuple
-     else
-         self.handle_collision(player_index_tuple)
-Function handle_collision(player_index_tuple)
-     # Giving example of open addressing (hash probing) as chaining was used in exercise:
-     # Assume implementation of a probe_hash in player with a different hashing algorithm
-     player = player_index_tuple[0]
-     index = player_index_tuple[1]
-     i = 1 # start with a step
-     while slot is not None
-        step_size = player.probe_hash()
-        position = index + i*step_size
-        if self.hash_map[position] is None or tombstone
-            self.has_map[position] = player_index_tuple
-            return
-        i = i + 1
-            
+class PlayerList:
+    """
+    Hash table implementation for PlayerList using open addressing with double hashing (hash probing).
+    
+    Open addressing handles collisions by probing for next available slot.
+    Double hashing uses two hash functions to minimize clustering.
+    Tombstones mark deleted entries. So find_slot does not halt for deletions. Maintains probe sequence.
+    """
+    # Constants
+    EMPTY = 0
+    OCCUPIED = 1
+    TOMBSTONE = 2
 
-     
+    function initialize(capacity):
+        table = array of (key=None, player=None, status=EMPTY) with size capacity
+        
+    function find_slot(key):
+       # Table full handling (implementation omitted)
+    
+        start_position = Player.hash1(key) mod capacity
+        step = Player.hash2(key) mod capacity
+        if step == 0: step = 1 # sanitises infinite loop
+        position = start_position
+        first_tombstone = None
+        
+        # Probe until finding key, empty slot, (table must not be full checked above)
+        for _ from 0 to capacity-1:
+            if table[position].status == EMPTY:
+                # Once empty slot is found, search ends. We return first empty slot even if it's a tombstone.
+                if first_tombstone is not None:
+                    return first_tombstone, False
+                return position, False
+                
+            if table[position].status == TOMBSTONE and first_tombstone is None:
+                first_tombstone = position
+                
+            if table[position].status == OCCUPIED and table[position].key == key:
+                return position, True
+                
+            position = (pos + step) mod capacity
+    
+    function get(key):
+        position, found = find_slot(key)
+        if found:
+            return table[position].player
+        return None
+        
+    function put(key, player):
+        # Resize if needed (implementation omitted)
+        position, found = find_slot(key)
+        table[position] = (key, player, OCCUPIED)
+            
+    function delete(key):
+        position, found = find_slot(key)
+        if found:
+            table[position] = (None, None, TOMBSTONE)
+            return True
+        return False
+            
+    function resize(new_size):
+        # Copy occupied entries to new table (implementation omitted)
 ```
 
 ## Reflection
