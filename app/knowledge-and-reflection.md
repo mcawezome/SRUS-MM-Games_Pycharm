@@ -8,8 +8,9 @@ The following are all examples of hash functions:
 
 ```python
 # (1) the simplest hash function (Stupidly Simple Hash)
-def ssh(key):
-    return 1
+def ssh():
+   return 1
+
 
 def ash(key):
    return key
@@ -80,24 +81,24 @@ def sha256_hash(key: str, size: int) -> int:
 > They all take an input and map it deterministically to an output value
 > Such that for any given input its hash can be calculated consistently
 
-2. What are the advantages and disadvantages of each of the above hash functions? Evaluate in terms of uniformity, determinism, efficiency, collision resistance, sensitivity to input changes, and security[1](#Reference). You may need to do some reasearch to answer this question 😱
+1. What are the advantages and disadvantages of each of the above hash functions? Evaluate in terms of uniformity, determinism, efficiency, collision resistance, sensitivity to input changes, and security[1](#Reference). You may need to do some research to answer this question 😱
 
 > uniformity, determinism, efficiency, collision resistance, sensitivity to input changes, and security
 > ssh is uniform, deterministic, efficient. It has as poor collision resistance as possible. Zero sensitivity to input changes. Completely insecure.
 > sum_of_ascii_values is not uniform. It is deterministic. It is efficient. Collision resistance is not ideal. Sensitivity to input isn't great as small changes to input produce small changes in output. Secure if people do not know your hash algorithm.
 > pearson table is uniform, deterministic, less efficient but still fine. Very good collision resistance. High sensitivity to inputs. Secure even if they know you are using a Pearson Hash as they need the table or the random seed.
 
-3. List the three most important attributes (arranged from most to least) in the context of a hash map? Justify your answer.
+1. List the three most important attributes (arranged from most to least) in the context of a hash map? Justify your answer.
 
 > 1. Deterministic - without this property hash tables will not work.
 > 2. Security - depending on application but this could be extremely important
 > 3. efficient/collision resistance/sensitivity to input. All the last 3 are equally important. Most of all they determine runtime of the algorithm
 
-4. Which of the above hash functions would you choose to implement the requirements of the task? Why?
+1. Which of the above hash functions would you choose to implement the requirements of the task? Why?
 
 > Pearson hash. It is by far the best in all categories.
 
-5. In your own words, explain each line in the pearson hash function above in terms of the criteria you listed in question 2.
+1. In your own words, explain each line in the pearson hash function above in terms of the criteria you listed in question 2.
 ```python
 # (3) Pearson hash function
 # https://en.wikipedia.org/wiki/Pearson_hashing
@@ -155,21 +156,49 @@ def pearson_hash(key: str, size: int) -> int:
 > ord(char) retrieves the ascii integer value of a given character.
 > ^ is XOR bitwise operation. The benefit of this operation is sensitivity of inputs.
 > Two similar inputs produce quite different outputs for such a simple operation.
-> So in summary: Access the n'th element in the random pearson table where n is previous hash(hash_) XOR with ord value of the char.
+> So in summary: Access the nth element in the random pearson table where n is previous hash(hash_) XOR with ord value of the char.
 
 ```return hash_ % size```
 
 > return an integer which is the remainder of hash_ divided by list size
 > hash_ could be an arbitrarily large number so modulo operation keeps it within index range.
 
-6. Write pseudocode of how you would store Players in PlayerLists in a hash map.
+1. Write pseudocode of how you would store Players in PlayerLists in a hash map.
+```pseudocode
+We need to create __hash__() function in Player
+When a player is to be inserted into PlayerList
+Class PlayerList:  
+Function initialise():
+     self.SIZE = 32
+     self.hash_map = self.SIZE multiple instances of empty list.
+Function insert(value)
+     if self.hash_map is full # python(if not (None in self.hash_map))
+         self.resize()
+     player = Player(value)
+     hashed_player = player.hash()
+     index_for_insert = hashed_player % self.length
+     player_index_tuple = (player, index_for_insert)
+     if self.hash_map[index_for_insert] is None or tombstone
+         self.hash_map[index_for_insert] = player_index_tuple
+     else
+         self.handle_collision(player_index_tuple)
+Function handle_collision(player_index_tuple)
+     # Giving example of open addressing (hash probing) as chaining was used in exercise:
+     # Assume implementation of a probe_hash in player with a different hashing algorithm
+     player = player_index_tuple[0]
+     index = player_index_tuple[1]
+     i = 1 # start with a step
+     while slot is not None
+        step_size = player.probe_hash()
+        position = index + i*step_size
+        if self.hash_map[position] is None or tombstone
+            self.has_map[position] = player_index_tuple
+            return
+        i = i + 1
+            
 
-> instead of a linked list, we use a hash map
-> Therefore the implementation will be almost the same
-> Some differences:
->     PlayerNodes must have key, value pairs
->     Alternatively, Each PlayerNodes key could be there position in the list.
-> stuck
+     
+```
 
 ## Reflection
 
@@ -181,7 +210,7 @@ def pearson_hash(key: str, size: int) -> int:
 > So I re-implemented the methods using key as input.
 > The challenge of understanding dunder methods therefore was overcome.
 
-2. If you didn't have to use a PlayerList, how would you have changed them implementation of the hash map and why?
+1. If you didn't have to use a PlayerList, how would you have changed them implementation of the hash map and why?
 
 > Use a dictionary to store all keys and values. Possibly making the entire PlayerHashMap a shell class for inbuilt dictionaries.
 > This would make the implementation as efficient as reasonably possible.
