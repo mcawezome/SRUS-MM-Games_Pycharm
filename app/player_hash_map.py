@@ -4,32 +4,52 @@ from player_node import PlayerNode
 
 
 class PlayerHashMap:
+    """A hash map implementation for storing and managing Player objects.
+
+    The hash map uses chaining with linked lists to handle collisions.
+    Each bucket in the hash map contains a PlayerList.
+
+    Attributes:
+        SIZE (int): The number of buckets in the hash map.
+        hashmap (list[PlayerList]): The list of buckets containing PlayerLists.
+    """
+
     def __init__(self) -> None:
-        """
-        Object containing a hashmap object (list containing PlayerLists)
-        Used for reducing time complexity of storing Players in a list
-        """
+        """Initialize an empty PlayerHashMap with a fixed number of buckets."""
         self.SIZE = 10
         self.hashmap = [PlayerList() for _ in range(self.SIZE)]
 
     def get_index(self, key: str | Player) -> int:
+        """Calculate the bucket index for a given key.
+
+        Args:
+            key: Either a player ID string or a Player object.
+
+        Returns:
+            int: The bucket index where the key should be stored.
+        """
         if isinstance(key, Player):
             return hash(key) % self.SIZE
         else:
             return Player.hash(key) % self.SIZE
 
     def __len__(self) -> int:
-        # Count total number of players across all lists
+        """Return the total number of players in the hash map.
+
+        Returns:
+            int: Total count of players across all buckets.
+        """
         total = 0
         for player_list in self.hashmap:
             total += len(player_list)
         return total
 
     def __setitem__(self, key, value) -> None:
-        """
-        Add or update a player in the hash map
-        key: player ID as string
-        value: player name as string
+        """Add or update a player in the hash map.
+
+        Args:
+            key (str): The player ID.
+            value (str): The player name.
         """
         player_list = self.hashmap[self.get_index(key)]
         result = player_list.find_node_with_key(key)
@@ -45,8 +65,16 @@ class PlayerHashMap:
             player_list.insert_at_tail(player_node)
 
     def __getitem__(self, key):
-        """
-        Get a player by key (player ID)
+        """Retrieve a player's name by their ID.
+
+        Args:
+            key (str): The player ID to look up.
+
+        Returns:
+            str: The player's name.
+
+        Raises:
+            KeyError: If no player is found with the given key.
         """
         player_list = self.hashmap[self.get_index(key)]
         result = player_list.find_node_with_key(key)
@@ -55,37 +83,23 @@ class PlayerHashMap:
         return result.player.name
 
     def __delitem__(self, key):
-        """
-        Delete a player by key (player ID)
+        """Remove a player from the hash map.
+
+        Args:
+            key (str): The player ID to remove.
+
+        Raises:
+            KeyError: If no player is found with the given key.
         """
         player_list = self.hashmap[self.get_index(key)]
         if not player_list.delete_node_with_key(key):
             raise KeyError(f"No player found with key: {key}")
 
     def display(self) -> None:
-        """Display a message to console including contents of hash map"""
+        """Print the contents of the hash map to the console.
+
+        Displays non-empty buckets with their index and contents.
+        """
         for index, player_list in enumerate(self.hashmap):
             if player_list.is_empty is False:
                 print(f"{index=}, {player_list=!r}")
-
-
-if __name__ == "__main__":
-    phm = PlayerHashMap()
-
-    # Adding players directly to the hash map
-    phm["20"] = "John Smith"
-    phm["23"] = "Stephen Curry"
-    phm["42"] = "Douglas Adams"
-
-    # Display the hash map
-    phm.display()
-
-    # Example of retrieval
-    print(f"Player with ID '23': {phm['23']}")
-
-    # Update a player's name
-    phm["42"] = "Joe"
-    # Display again after update
-    phm.display()
-
-    print(phm['12'])

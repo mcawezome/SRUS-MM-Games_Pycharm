@@ -11,7 +11,6 @@ The following are all examples of hash functions:
 def ssh():
    return 1
 
-
 def ash(key):
    return key
 
