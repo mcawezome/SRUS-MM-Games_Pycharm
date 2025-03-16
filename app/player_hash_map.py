@@ -11,6 +11,7 @@ class PlayerHashMap:
 
     Attributes:
         SIZE (int): The number of buckets in the hash map.
+        MAX_LOADING_FACTOR (float): Maximum ratio of items to buckets before resizing.
         hashmap (list[PlayerList]): The list of buckets containing PlayerLists.
     """
 
@@ -26,17 +27,33 @@ class PlayerHashMap:
         return round(float(len(self) / self.SIZE), 3) # Loading factor to 3 d.p.
 
     @property
-    def is_loading_factor_exceeded(self):
+    def is_loading_factor_exceeded(self) -> bool:
+        """Check if the current loading factor exceeds the maximum allowed.
+
+        Returns:
+            bool: True if the loading factor is exceeded, False otherwise.
+        """
         return self.loading_factor > self.MAX_LOADING_FACTOR
 
     def resize(self):
-        self.SIZE = self.SIZE * 2
-        hashmap_original = self.hashmap
-        self.hashmap = [PlayerList() for _ in range(self.SIZE)]
-        for player_list in hashmap_original:
-            if len(player_list) > 0:
-                for player in player_list:
-                    self.hashmap[player.uid] = player.name
+        """Double the size of the hash map and rehash all existing entries.
+
+        This method is called automatically when the loading factor exceeds MAX_LOADING_FACTOR.
+        """
+        try:
+            self._resizing = True
+            self.SIZE = self.SIZE * 2
+            old_hashmap = self.hashmap
+            self.hashmap = [PlayerList() for _ in range(self.SIZE)]
+            
+            # Rehash all existing entries
+            for player_list in old_hashmap:
+                if len(player_list) > 0:
+                    for player in player_list:
+                        # Use proper hashing through __setitem__
+                        self[player.uid] = player.name
+        finally:
+            self._resizing = False  # Ensure flag is reset even if an error occurs
 
     def get_index(self, key: str | Player) -> int:
         """Calculate the bucket index for a given key.
@@ -70,6 +87,14 @@ class PlayerHashMap:
             key (str): The player ID.
             value (str): The player name.
         """
+
+        try:
+            player = Player(key, value)
+        except ValueError as e:
+            raise ValueError(f"Invalid player ID or name: {e}")
+        except TypeError as e:
+            raise TypeError(f"Invalid type forplayer ID or name: {e}")
+
         if not self._resizing and self.is_loading_factor_exceeded:
             self.resize()
 
@@ -97,7 +122,17 @@ class PlayerHashMap:
 
         Raises:
             KeyError: If no player is found with the given key.
+            TypeError: If key is not a string.
+            ValueError: If key is empty.
         """
+        
+        try:
+            player = Player(key, value)
+        except ValueError as e:
+            raise ValueError(f"Invalid player ID or name: {e}")
+        except TypeError as e:
+            raise TypeError(f"Invalid type forplayer ID or name: {e}")
+
         player_list = self.hashmap[self.get_index(key)]
         result = player_list.find_node_with_key(key)
         if result is None:
@@ -112,7 +147,16 @@ class PlayerHashMap:
 
         Raises:
             KeyError: If no player is found with the given key.
+            TypeError: If key is not a string.
+            ValueError: If key is empty.
         """
+        try:
+            player = Player(key, value = "default")
+        except ValueError as e:
+            raise ValueError(f"Invalid player ID: {e}")
+        except TypeError as e:
+            raise TypeError(f"Invalid type for player ID: {e}")
+
         player_list = self.hashmap[self.get_index(key)]
         if not player_list.delete_node_with_key(key):
             raise KeyError(f"No player found with key: {key}")
