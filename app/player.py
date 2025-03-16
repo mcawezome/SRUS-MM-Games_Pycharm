@@ -164,9 +164,6 @@ class Player:
     def __hash__(self) -> int:
         """Generates a hash value for the Player instance.
 
-        Args:
-            key: Optional string to hash. If None, uses player's uid.
-
         Returns:
             int: Hash value using DJB2 algorithm.
         """

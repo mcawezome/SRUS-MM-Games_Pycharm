@@ -205,6 +205,11 @@ class PlayerList:
         return False
 
     def __repr__(self):
+        """Returns the string representation of the PlayerList instance.
+
+            Returns:
+                str: A string in the format "node1->node2->node3".
+        """
         return " -> ".join(f"{node.key}'{node.name}'" for node in list(self))
 
     def display(self, forward: bool = True) -> None:
