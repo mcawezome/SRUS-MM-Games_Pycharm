@@ -108,8 +108,10 @@ class PlayerName:
             ValueError: If name is not a non-empty string.
         """
         # Validate name is a non-empty string
-        if not isinstance(value, str) or value.strip() == "":
-            raise ValueError("Player name must be a non-empty string")
+        if not isinstance(value, str):
+            raise TypeError("Player name must be a string")
+        if value.strip() == "":
+            raise ValueError("Player name must be non-empty")
         # Store sanitized name (stripped of extra whitespace)
         setattr(instance, self.name, value.strip())
 

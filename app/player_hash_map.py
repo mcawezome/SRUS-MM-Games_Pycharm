@@ -24,6 +24,11 @@ class PlayerHashMap:
 
     @property
     def loading_factor(self) -> float:
+        """Calculate the current load factor of the hash map.
+
+        Returns:
+            float: Ratio of total items to bucket count, rounded to 3 decimal places.
+        """
         return round(float(len(self) / self.SIZE), 3) # Loading factor to 3 d.p.
 
     @property
@@ -35,7 +40,7 @@ class PlayerHashMap:
         """
         return self.loading_factor > self.MAX_LOADING_FACTOR
 
-    def resize(self):
+    def resize(self) -> None:
         """Double the size of the hash map and rehash all existing entries.
 
         This method is called automatically when the loading factor exceeds MAX_LOADING_FACTOR.
@@ -49,8 +54,9 @@ class PlayerHashMap:
             # Rehash all existing entries
             for player_list in old_hashmap:
                 if len(player_list) > 0:
-                    for player in player_list:
+                    for player_node in player_list:
                         # Use proper hashing through __setitem__
+                        player = player_node.player
                         self[player.uid] = player.name
         finally:
             self._resizing = False  # Ensure flag is reset even if an error occurs
@@ -88,19 +94,14 @@ class PlayerHashMap:
             value (str): The player name.
         """
 
-        try:
-            player = Player(key, value)
-        except ValueError as e:
-            raise ValueError(f"Invalid player ID or name: {e}")
-        except TypeError as e:
-            raise TypeError(f"Invalid type forplayer ID or name: {e}")
+        player = Player(key, value)
 
         if not self._resizing and self.is_loading_factor_exceeded:
             self.resize()
 
         player_list = self.hashmap[self.get_index(key)]
         result = player_list.find_node_with_key(key)
-        player_node = PlayerNode(Player(key, value))
+        player_node = PlayerNode(player)
         if result is not None:
             # We need to update name.
             # The below implementation creates a new node and replaces the node with old name.
@@ -125,13 +126,8 @@ class PlayerHashMap:
             TypeError: If key is not a string.
             ValueError: If key is empty.
         """
-        
-        try:
-            player = Player(key, value)
-        except ValueError as e:
-            raise ValueError(f"Invalid player ID or name: {e}")
-        except TypeError as e:
-            raise TypeError(f"Invalid type forplayer ID or name: {e}")
+        # validates key
+        player = Player(key, "default")
 
         player_list = self.hashmap[self.get_index(key)]
         result = player_list.find_node_with_key(key)
@@ -151,7 +147,7 @@ class PlayerHashMap:
             ValueError: If key is empty.
         """
         try:
-            player = Player(key, value = "default")
+            player = Player(key, "default")
         except ValueError as e:
             raise ValueError(f"Invalid player ID: {e}")
         except TypeError as e:

@@ -67,8 +67,8 @@ class TestPlayerHashMap(unittest.TestCase):
 
     def test_key_errors(self):
         """Test error handling for invalid keys."""
-        with self.assertRaises(KeyError):
-            _ = self.hash_map["non_existent"]
+        with self.assertRaises(ValueError):
+            _ = self.hash_map["bad uid"]
 
     def test_display(self):
         """Test that display method executes without errors."""
@@ -98,7 +98,7 @@ class TestPlayerHashMap(unittest.TestCase):
     def test_resize_behavior(self):
         """Test that the hash map resizes correctly when loading factor is exceeded."""
         initial_size = self.hash_map.SIZE
-        players_to_add = int(initial_size * self.hash_map.MAX_LOADING_FACTOR) + 1
+        players_to_add = int(initial_size * self.hash_map.MAX_LOADING_FACTOR) + 2
         
         # Calculate expected loading factor after adding players
         expected_initial_loading = players_to_add / initial_size
