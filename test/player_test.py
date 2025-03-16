@@ -41,7 +41,7 @@ class TestPlayerClass(unittest.TestCase):
             Player("1", "")
         with self.assertRaises(ValueError):
             Player("1", "   ")
-        with self.assertRaises(ValueError):
+        with self.assertRaises(TypeError):
             Player("1", 123)
 
     def test_update_attributes(self):

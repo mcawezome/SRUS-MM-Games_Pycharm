@@ -7,12 +7,14 @@ class PlayerHashMap:
     """A hash map implementation for storing and managing Player objects.
 
     The hash map uses chaining with linked lists to handle collisions.
-    Each bucket in the hash map contains a PlayerList.
+    Each bucket in the hash map contains a PlayerList. The hash map automatically
+    resizes when the load factor exceeds MAX_LOADING_FACTOR.
 
     Attributes:
         SIZE (int): The number of buckets in the hash map.
         MAX_LOADING_FACTOR (float): Maximum ratio of items to buckets before resizing.
         hashmap (list[PlayerList]): The list of buckets containing PlayerLists.
+        _resizing (bool): Internal flag to prevent recursive resizing during rehash.
     """
 
     def __init__(self) -> None:
@@ -33,10 +35,10 @@ class PlayerHashMap:
 
     @property
     def is_loading_factor_exceeded(self) -> bool:
-        """Check if the current loading factor exceeds the maximum allowed.
+        """Check if the current loading factor equals or exceeds the maximum allowed.
 
         Returns:
-            bool: True if the loading factor is exceeded, False otherwise.
+            bool: True if the loading factor is greater than or equal to MAX_LOADING_FACTOR.
         """
         return self.loading_factor >= self.MAX_LOADING_FACTOR
 
@@ -93,7 +95,7 @@ class PlayerHashMap:
             key (str): The player ID.
             value (str): The player name.
         """
-
+        # Player constructor handles input validation for both key and value
         player = Player(key, value)
 
         if not self._resizing and self.is_loading_factor_exceeded:
@@ -126,7 +128,7 @@ class PlayerHashMap:
             TypeError: If key is not a string.
             ValueError: If key is empty.
         """
-        # validates key
+        # Player constructor validates the key format
         player = Player(key, "default")
 
         player_list = self.hashmap[self.get_index(key)]
@@ -146,12 +148,8 @@ class PlayerHashMap:
             TypeError: If key is not a string.
             ValueError: If key is empty.
         """
-        try:
-            player = Player(key, "default")
-        except ValueError as e:
-            raise ValueError(f"Invalid player ID: {e}")
-        except TypeError as e:
-            raise TypeError(f"Invalid type for player ID: {e}")
+        # Player constructor validates the key format
+        player = Player(key, "default")
 
         player_list = self.hashmap[self.get_index(key)]
         if not player_list.delete_node_with_key(key):
