@@ -77,26 +77,46 @@ def sha256_hash(key: str, size: int) -> int:
 ```
 
 1. All of the above functions are hash functions. Explain how so - what key properties do they all share?
-
+> Deterministic
 > They all take an input and map it deterministically to an output value
 > Such that for any given input its hash can be calculated consistently
+> Mapping
+> Hash functions implement a mapping function h: X → Y 
+> Most perform a dimension reduction in the process. (all but ash in your examples)
+> Many-to-One transformation
+> Which is a Many-to-One transformation - Multiple inputs to the same output.
+> Defined domain and range
+> Specified input and output ranges of values
 
 1. What are the advantages and disadvantages of each of the above hash functions? Evaluate in terms of uniformity, determinism, efficiency, collision resistance, sensitivity to input changes, and security[1](#Reference). You may need to do some research to answer this question 😱
 
-> uniformity, determinism, efficiency, collision resistance, sensitivity to input changes, and security
 > ssh is uniform, deterministic, efficient. It has as poor collision resistance as possible. Zero sensitivity to input changes. Completely insecure.
-> sum_of_ascii_values is not uniform. It is deterministic. It is efficient. Collision resistance is not ideal. Sensitivity to input isn't great as small changes to input produce small changes in output. Secure if people do not know your hash algorithm.
-> pearson table is uniform, deterministic, less efficient but still fine. Very good collision resistance. High sensitivity to inputs. Secure even if they know you are using a Pearson Hash as they need the table or the random seed.
+> sum_of_ascii_values is not uniform. It is deterministic. It is efficient. Collision resistance is not ideal. Sensitivity to input isn't great as small changes to input produce small changes in output. insecure (can be puzzled out easily).
+> pearson table is uniform, deterministic, extremely efficent (lookups and XOR only). Collisions OK but suffer from birthday paradox. High sensitivity to inputs. Secure enough but can reverse with brute force.
+> ```pseudocode
+Builtin hash for str
+for current in str
+   multiply current by multiplier (start 1000003)
+   Add unicode code point on current
+   modulo 2^n (bit-size modification)
+   XOR with str length
+''''
+> builtin hash is moderately uniform, deterministic if seeded (random start), O(n) efficient. Good collision resistance. Medium sensitivity to inputs. possibly reversible.
+> SHA256 extremely high uniformity, strictly deterministic, Reasonably efficient, Amazingly collision resistant, Strong sensitivity to inputs. cryptographically secure.
 
 1. List the three most important attributes (arranged from most to least) in the context of a hash map? Justify your answer.
 
-> 1. Deterministic - without this property hash tables will not work.
-> 2. Security - depending on application but this could be extremely important
-> 3. efficient/collision resistance/sensitivity to input. All the last 3 are equally important. Most of all they determine runtime of the algorithm
+> 1. Deterministic - Without this property retrieval in hash tables simply will not work.
+> The next two are linked and comparable and effect memory allocation. 
+> Memory is an important factor as it is a limited resource and memory reallocation should be avoided if possible
+> 2. Uniformity - Uniformity defines the distribution of values within a hash function. Ultimately defining collision resistance.
+> 3. Collision Resistance - This effects memory allocation significantly. Also effects runtime.
 
 1. Which of the above hash functions would you choose to implement the requirements of the task? Why?
 
-> Pearson hash. It is by far the best in all categories.
+> I would pick Pearson's Hash. Due to its positive qualities across the categories.
+> Python builtin hash would be great also but does not satisfy project task requirement to implement a hash function.
+> SHA256 is specifically for security or checksum applications, not a lookup table in a small project.
 
 1. In your own words, explain each line in the pearson hash function above in terms of the criteria you listed in question 2.
 ```python
@@ -242,8 +262,9 @@ class PlayerList:
 
 1. If you didn't have to use a PlayerList, how would you have changed them implementation of the hash map and why?
 
-> Use a dictionary to store all keys and values. Possibly making the entire PlayerHashMap a shell class for inbuilt dictionaries.
-> This would make the implementation as efficient as reasonably possible.
+> Use a dictionary to store all keys and values.
+> Possibly making the entire PlayerHashMap a shell class for inbuilt dictionaries.
+> This would make the implementation as efficient as reasonably possible in Python.
 
 ## Reference
 
