@@ -98,7 +98,7 @@ class TestPlayerHashMap(unittest.TestCase):
     def test_resize_behavior(self):
         """Test that the hash map resizes correctly when loading factor is exceeded."""
         initial_size = self.hash_map.SIZE
-        players_to_add = int(initial_size * self.hash_map.MAX_LOADING_FACTOR) + 2
+        players_to_add = int(initial_size * self.hash_map.MAX_LOADING_FACTOR) + 1
         
         # Calculate expected loading factor after adding players
         expected_initial_loading = players_to_add / initial_size

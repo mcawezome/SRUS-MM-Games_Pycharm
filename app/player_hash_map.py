@@ -38,9 +38,9 @@ class PlayerHashMap:
         Returns:
             bool: True if the loading factor is exceeded, False otherwise.
         """
-        return self.loading_factor > self.MAX_LOADING_FACTOR
+        return self.loading_factor >= self.MAX_LOADING_FACTOR
 
-    def resize(self) -> None:
+    def _resize(self) -> None:
         """Double the size of the hash map and rehash all existing entries.
 
         This method is called automatically when the loading factor exceeds MAX_LOADING_FACTOR.
@@ -97,15 +97,15 @@ class PlayerHashMap:
         player = Player(key, value)
 
         if not self._resizing and self.is_loading_factor_exceeded:
-            self.resize()
+            self._resize()
 
         player_list = self.hashmap[self.get_index(key)]
         result = player_list.find_node_with_key(key)
         player_node = PlayerNode(player)
         if result is not None:
-            # We need to update name.
-            # The below implementation creates a new node and replaces the node with old name.
-            # This allows us to keep name read-only in Player class.
+            # Found player with identical uid in list but different name.
+            # The below implementation creates a new node and replaces old node.
+            # This allows us to keep name read-only in PlayerNode class.
             index = player_list.find_index_with_key(key)
             player_list.delete_node_with_key(key)
             player_list.insert_at_position(player_node, index)
