@@ -17,7 +17,26 @@ class PlayerHashMap:
     def __init__(self) -> None:
         """Initialize an empty PlayerHashMap with a fixed number of buckets."""
         self.SIZE = 10
+        self.MAX_LOADING_FACTOR = 0.7
         self.hashmap = [PlayerList() for _ in range(self.SIZE)]
+        self._resizing = False  # Flag to prevent recursive resizing
+
+    @property
+    def loading_factor(self) -> float:
+        return round(float(len(self) / self.SIZE), 3) # Loading factor to 3 d.p.
+
+    @property
+    def is_loading_factor_exceeded(self):
+        return self.loading_factor > self.MAX_LOADING_FACTOR
+
+    def resize(self):
+        self.SIZE = self.SIZE * 2
+        hashmap_original = self.hashmap
+        self.hashmap = [PlayerList() for _ in range(self.SIZE)]
+        for player_list in hashmap_original:
+            if len(player_list) > 0:
+                for player in player_list:
+                    self.hashmap[player.uid] = player.name
 
     def get_index(self, key: str | Player) -> int:
         """Calculate the bucket index for a given key.
@@ -51,6 +70,9 @@ class PlayerHashMap:
             key (str): The player ID.
             value (str): The player name.
         """
+        if not self._resizing and self.is_loading_factor_exceeded:
+            self.resize()
+
         player_list = self.hashmap[self.get_index(key)]
         result = player_list.find_node_with_key(key)
         player_node = PlayerNode(Player(key, value))
